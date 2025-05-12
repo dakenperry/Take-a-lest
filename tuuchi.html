@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>休憩通知アプリ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>休憩通知アプリ</h1>
+    <p>何分ごとに通知を表示しますか？</p>
+    <input type="number" id="intervalInput" placeholder="分" min="1">
+    <button onclick="startTimer()">通知を開始</button>
+
+    <div id="popup">
+        <img src="greentea.png" alt="休憩アイコン">
+        <p>休憩してください！💡</p>
+        <button onclick="closePopup()">閉じる</button>
+    </div>
+
+    <script>
+        function startTimer() {
+            let minutes = document.getElementById("intervalInput").value;
+            if (minutes < 1) {
+                alert("1分以上を入力してください！");
+                return;
+            }
+
+            let interval = minutes * 10 * 1000;
+            alert(`休憩通知を ${minutes} 分ごとに表示します！`);
+
+            setInterval(() => {
+                if (Notification.permission === "granted") {
+                    new Notification("休憩のお知らせ", { 
+                        body: "そろそろ休憩しましょう！💡", 
+                        icon: "greentea.png"
+                    });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            new Notification("休憩のお知らせ", { 
+                                body: "そろそろ休憩しましょう！💡", 
+                                icon: "greentea.png"
+                            });
+                        }
+                    });
+                }
+            }, interval);
+        }
+    </script>
+</body>
+</html>
